@@ -57,3 +57,19 @@ async def get_student_by_id(id: str):
     else:
         raise HTTPException(status_code=404, detail="Student not found")
 
+
+
+@router.patch("/students/{id}", status_code=204)
+async def update_student(id: str, student_update: Student):
+    # Convert Pydantic model to dictionary
+    student_dict = student_update.dict(exclude_unset=True)
+    
+    # Check if student with given ID exists
+    existing_student = collection.find_one({"id": id})
+    
+    if existing_student:
+        # Update student in MongoDB collection
+        collection.update_one({"id": id}, {"$set": student_dict})
+        return
+    
+    raise HTTPException(status_code=404, detail="Student not found")
