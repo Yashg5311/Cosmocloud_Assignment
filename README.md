@@ -9,9 +9,8 @@ Database - MongoDB (Use M0 Free Cluster of MongoDB Atlas)
 
 # Live Link
 Please find the live link of the Assesment:
+https://cosmocloud-assignment1.onrender.com/
 
-
-# Screenshots
 
 
 
