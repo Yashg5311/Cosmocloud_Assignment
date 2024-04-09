@@ -47,3 +47,13 @@ async def list_students(country: str = Query(None, description="To apply filter 
     
     return {"data": students}
 
+@router.get("/students/{id}", response_model=dict)
+async def get_student_by_id(id: str):
+    student = collection.find_one({"id": id}, {"_id": 0})
+    
+    if student:
+        student.pop("id")
+        return student
+    else:
+        raise HTTPException(status_code=404, detail="Student not found")
+
