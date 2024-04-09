@@ -4,7 +4,30 @@ from models.student_model import Student
 import random
 import string
 
+
 router = APIRouter()
+
+@router.get("/", status_code=201, response_model=dict)
+async def get_root():
+    return {
+        "/docs":"For fast-api for gui interface",
+        "get":{
+        "/students":"to get student detail",
+        "/students/{id}":"to get student detail",
+        },
+         "post": {
+            "/students": "For creating a new student by id",
+            
+        },
+        "patch": {
+            "/students/{id}": "For updating an existing student"
+        },
+        "delete": {
+            "/students/{id}": "For deleting an existing student"
+        },
+        "/":"For fast-api for gui interface",
+        "/d":"For fast-api for gui interface",
+    }
 
 def generate_custom_id():
     # Generate a random 6-digit alphanumeric ID
@@ -64,6 +87,7 @@ async def get_student_by_id(id: str):
 
 
 
+
 @router.patch("/students/{id}", status_code=204)
 async def update_student(id: str, student_update: Student):
     # Convert Pydantic model to dictionary
@@ -77,7 +101,9 @@ async def update_student(id: str, student_update: Student):
         collection.update_one({"id": id}, {"$set": student_dict})
         return {}
     
-    raise HTTPException(status_code=404, detail="Student not found")
+    else:
+        raise HTTPException(status_code=404, detail="Student not found")
+
 
 
 @router.delete("/students/{id}", status_code=200)
@@ -89,5 +115,6 @@ async def delete_student(id: str):
         # Delete student from MongoDB collection
         collection.delete_one({"id": id})
         return {}
-    
-    raise HTTPException(status_code=404, detail="Student not found")
+        
+    else:
+        raise HTTPException(status_code=404, detail="Student not found")
