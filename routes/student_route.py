@@ -45,7 +45,12 @@ async def list_students(country: str = Query(None, description="To apply filter 
     
     students = list(collection.find(query, projection))
     
+    # Modify each student document to remove the "id" field
+    for student in students:
+        student.pop("id", None)
+    
     return {"data": students}
+
 
 @router.get("/students/{id}", response_model=dict)
 async def get_student_by_id(id: str):
@@ -70,7 +75,7 @@ async def update_student(id: str, student_update: Student):
     if existing_student:
         # Update student in MongoDB collection
         collection.update_one({"id": id}, {"$set": student_dict})
-        return
+        return {}
     
     raise HTTPException(status_code=404, detail="Student not found")
 
@@ -83,6 +88,6 @@ async def delete_student(id: str):
     if existing_student:
         # Delete student from MongoDB collection
         collection.delete_one({"id": id})
-        return {"message": "Student deleted successfully"}
+        return {}
     
     raise HTTPException(status_code=404, detail="Student not found")
