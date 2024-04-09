@@ -30,3 +30,20 @@ async def create_student(student: Student):
     return {"id": custom_id}
 
 
+@router.get("/students", response_model=dict)
+async def list_students(country: str = Query(None, description="To apply filter of country."),
+                        age: int = Query(None, description="Only records which have age greater than equal to the provided age should be present in the result.")):
+    query = {}
+    
+    if country:
+        query["address.country"] = country
+    
+    if age:
+        query["age"] = {"$gte": age}
+    
+    projection = {"name": 1, "age": 1, "id": 1, "_id": 0}  # Include id in the result
+    
+    students = list(collection.find(query, projection))
+    
+    return {"data": students}
+
