@@ -73,3 +73,16 @@ async def update_student(id: str, student_update: Student):
         return
     
     raise HTTPException(status_code=404, detail="Student not found")
+
+
+@router.delete("/students/{id}", status_code=200)
+async def delete_student(id: str):
+    # Check if student with given ID exists
+    existing_student = collection.find_one({"id": id})
+    
+    if existing_student:
+        # Delete student from MongoDB collection
+        collection.delete_one({"id": id})
+        return {"message": "Student deleted successfully"}
+    
+    raise HTTPException(status_code=404, detail="Student not found")
